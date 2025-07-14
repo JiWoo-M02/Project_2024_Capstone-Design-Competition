@@ -22,6 +22,7 @@
 3. 2024 캡스톤 디자인 대회 특별상(인기상)
    
 <figure class="thrid">
+  <p align="left">
   <img width="250" alt="2024_차세대_디스플레이_컨소시엄_창의적_종합설계_경진대회_동상" src="https://github.com/user-attachments/assets/6072183f-1f97-4626-99be-c884e71a6806" />
   <img width="250" alt="2024_공학_특별상" src="https://github.com/user-attachments/assets/9520aabc-1cb4-4256-98af-1d80167b6176" />
   <img width="250" alt="2024_공학_대상" src="https://github.com/user-attachments/assets/b193fd18-f6ac-479f-8165-ccb8253236c4" />
