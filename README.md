@@ -12,9 +12,13 @@
   
 ### 2024년도 차세대 디스플레이 컨소시엄 창의적 종합설계 경진대회
 <img height="700" alt="image" src="https://github.com/user-attachments/assets/718361db-f205-48ce-88f1-b90743a76749" />
+<br>
 
 ### 2024년도 교내 캡스톤 디자인 경진대회
-
+<img height="700" alt="4ON_캡스톤디자인_판넬" src="https://github.com/user-attachments/assets/9ea30ad8-ccc3-4950-ab65-e954239ccddc" />
+<br>
+<br>
+<br>
 
 ## 수상
 1. 2024 차세대 디스플레이 컨소시엄 창의적 종합설계 경진대회 동상
@@ -23,8 +27,8 @@
    
 <p align="left">
   <img height="350" alt="2024_차세대_디스플레이_컨소시엄_창의적_종합설계_경진대회_동상" src="https://github.com/user-attachments/assets/6072183f-1f97-4626-99be-c884e71a6806" />
-  <img height="350" alt="2024_공학_특별상" src="https://github.com/user-attachments/assets/9520aabc-1cb4-4256-98af-1d80167b6176" />
   <img height="350" alt="2024_공학_대상" src="https://github.com/user-attachments/assets/b193fd18-f6ac-479f-8165-ccb8253236c4" />
+  <img height="350" alt="2024_공학_특별상" src="https://github.com/user-attachments/assets/9520aabc-1cb4-4256-98af-1d80167b6176" />
 </p>
 
 
