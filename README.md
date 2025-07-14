@@ -15,7 +15,7 @@
 <br>
 
 ### 2024년도 교내 캡스톤 디자인 경진대회
-<img height="700" alt="4ON_캡스톤디자인_판넬" src="https://github.com/user-attachments/assets/9ea30ad8-ccc3-4950-ab65-e954239ccddc" />
+<img height="700" alt="4ON 캡스톤디자인_판넬" src="https://github.com/user-attachments/assets/e67c0bef-180e-4b8b-96d1-d8d6b28b51f2" />
 <br>
 <br>
 <br>
