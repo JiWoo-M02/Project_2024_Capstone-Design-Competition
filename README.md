@@ -16,9 +16,10 @@
 | -------------------------------------------------------- | ----------------------------------- |
 | <p align="center">
   <img height="500" src="https://github.com/user-attachments/assets/718361db-f205-48ce-88f1-b90743a76749" />
+  </p>
+| <p align="center">
   <img height="500" src="https://github.com/user-attachments/assets/e67c0bef-180e-4b8b-96d1-d8d6b28b51f2" />
-</p>
-|
+</p> |
 <br>
 <br>
 <br>
