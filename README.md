@@ -11,11 +11,10 @@
 
   
 ### 2024년도 교내 캡스톤 디자인 경진대회
-<img width="600" alt="Image" src="https://github.com/user-attachments/assets/e7a0385b-4b73-436a-8fbc-01c561ebb637">
+<img width="730" height="1329" alt="image" src="https://github.com/user-attachments/assets/dabbf31d-9cac-4bbe-8609-5aec2d07069b" />
+
 
 ## 수상
 1. 2024 차세대 디스플레이 컨소시엄 창의적 종합설계 경진대회 동상
 2. 2024 캡스톤 디자인 대회 대상
 3. 2024 캡스톤 디자인 대회 특별상(인기상)
-<img width="1210" height="133" alt="image" src="https://github.com/user-attachments/assets/b2fabb04-395e-4ff7-bf08-077106cbd956" />
-
