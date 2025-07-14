@@ -22,9 +22,9 @@
 3. 2024 캡스톤 디자인 대회 특별상(인기상)
    
 <figure class="thrid">
-  <img width="200" alt="image" src="https://github.com/user-attachments/assets/e9b1a27b-cca5-4b3e-8b44-df98bfe054c5" />
-  <img width="200" alt="image" src="https://github.com/user-attachments/assets/8c876e54-075e-498a-be6e-3fb98072c252" />
-  <img width="200" alt="image" src="https://github.com/user-attachments/assets/6111a14c-daaf-446e-988f-994c0bcfff09" />
+  <img width="250" alt="image" src="https://github.com/user-attachments/assets/e9b1a27b-cca5-4b3e-8b44-df98bfe054c5" />
+  <img width="250" alt="image" src="https://github.com/user-attachments/assets/8c876e54-075e-498a-be6e-3fb98072c252" />
+  <img width="250" alt="image" src="https://github.com/user-attachments/assets/6111a14c-daaf-446e-988f-994c0bcfff09" />
 </figure>
 
 
