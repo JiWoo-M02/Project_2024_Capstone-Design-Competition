@@ -1,15 +1,18 @@
 # 2024_Social-Welfare-Transportation-Support-System-Using-Deep-Learning
+본 프로젝트는 **2024년도 교내 캡스톤 디자인 경진대회**를 위해 진행되었습니다.
+  
+<br>
+<br>
+<br>
 
-  본 프로젝트는 **2024년도 대한전기학회 제15회 스마트 에너지 경진대회**를 위해 진행되었습니다.
-
-
-
+## 작품 설명
+딥러닝 기반의 YOLO 알고리즘을 활용하여 교통약자를 실시간으로 인식하고, 보행 신호를 자동으로 조정하여 안전성과 교통 효율성을 높이는 시스템 개발
+<br>
+<br>
+<br>
   
 ## 포스터
 
-
-
-  
 ### 2024년도 차세대 디스플레이 컨소시엄 창의적 종합설계 경진대회
 <img height="700" alt="image" src="https://github.com/user-attachments/assets/718361db-f205-48ce-88f1-b90743a76749" />
 <br>
