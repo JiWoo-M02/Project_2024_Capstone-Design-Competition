@@ -1,0 +1,493 @@
+// 핀 번호 설정
+int eastCledRed = 2;
+int eastCledOrange = 3;
+int eastCledGreen = 4;
+int westCledRed = 5;
+int westCledOrange = 6;
+int westCledGreen = 7;
+int southCledRed = 8;
+int southCledOrange = 9;
+int southCledGreen = 10;
+int northCledRed = 11;
+int northCledOrange = 12;
+int northCledGreen = 13;
+
+int eastPledRed = 14;
+int eastPledGreen = 15;
+int westPledRed = 16;
+int westPledGreen = 17;
+int southPledRed = 18;
+int southPledGreen = 19;
+int northPledRed = 20;
+int northPledGreen = 21;
+
+int vehicleSignalPin = 22;  // "차량" 신호 입력 핀
+int defaultSignalPin = 23;  // "기본" 신호 입력 핀
+
+// 7세그먼트 핀 설정
+int east_segA = 24;
+int east_segB = 25;
+int east_segC = 26;
+int east_segD = 27;
+int east_segE = 28;
+int east_segF = 29;
+int east_segG = 30;
+
+int west_segA = 31;
+int west_segB = 32;
+int west_segC = 33;
+int west_segD = 34;
+int west_segE = 35;
+int west_segF = 36;
+int west_segG = 37;
+
+int south_segA = 38;
+int south_segB = 39;
+int south_segC = 40;
+int south_segD = 41;
+int south_segE = 42;
+int south_segF = 43;
+int south_segG = 44;
+
+int north_segA = 45;
+int north_segB = 46;
+int north_segC = 47;
+int north_segD = 48;
+int north_segE = 49;
+int north_segF = 50;
+int north_segG = 51;
+
+const long greenLightDuration = 2000;  // 초록불 3초
+const long yellowLightDuration = 1000; // 노란불 1초
+
+unsigned long previousMillis = 0;
+int currentLight = 1;  // 현재 초록불이 켜진 차량 신호등 (1번부터 시작)
+int state;
+int previousState = -1;  // 이전 상태를 저장할 변수
+
+bool vehicleMode = false;  // 현재 "차량" 모드가 활성화되어 있는지 여부
+bool pedestrianGreen = false;  // 보행자 신호등이 초록인지 여부를 추적
+
+// 7세그먼트에 표시할 숫자의 세그먼트 패턴
+int numbers[10][7] = {
+  {LOW, LOW, LOW, LOW, LOW, LOW, HIGH},  // 0
+  {HIGH, LOW, LOW, HIGH, HIGH, HIGH, HIGH},  // 1
+  {LOW, LOW, HIGH, LOW, LOW, HIGH, LOW},  // 2
+  {LOW, LOW, LOW, LOW, HIGH, HIGH, LOW},  // 3
+  {HIGH, LOW, LOW, HIGH, HIGH, LOW, LOW},  // 4
+  {LOW, HIGH, LOW, LOW, HIGH, LOW, LOW},  // 5
+  {LOW, HIGH, LOW, LOW, LOW, LOW, LOW},  // 6
+  {LOW, LOW, LOW, HIGH, HIGH, HIGH, HIGH},  // 7
+  {LOW, LOW, LOW, LOW, LOW, LOW, LOW},  // 8
+  {LOW, LOW, LOW, LOW, HIGH, LOW, LOW}   // 9
+};
+
+void setup() {
+  // 차량 신호등 핀 설정
+  pinMode(eastCledRed, OUTPUT);
+  pinMode(eastCledOrange, OUTPUT);
+  pinMode(eastCledGreen, OUTPUT);
+  pinMode(westCledRed, OUTPUT);
+  pinMode(westCledOrange, OUTPUT);
+  pinMode(westCledGreen, OUTPUT);
+  pinMode(southCledRed, OUTPUT);
+  pinMode(southCledOrange, OUTPUT);
+  pinMode(southCledGreen, OUTPUT);
+  pinMode(northCledRed, OUTPUT);
+  pinMode(northCledOrange, OUTPUT);
+  pinMode(northCledGreen, OUTPUT);
+
+  // 보행자 신호등 핀 설정
+  pinMode(eastPledRed, OUTPUT);
+  pinMode(eastPledGreen, OUTPUT);
+  pinMode(westPledRed, OUTPUT);
+  pinMode(westPledGreen, OUTPUT);
+  pinMode(southPledRed, OUTPUT);
+  pinMode(southPledGreen, OUTPUT);
+  pinMode(northPledRed, OUTPUT);
+  pinMode(northPledGreen, OUTPUT);
+
+  // 신호 입력 핀 설정
+  pinMode(vehicleSignalPin, INPUT);
+  pinMode(defaultSignalPin, INPUT);
+
+  // 7세그먼트 디스플레이 핀 설정
+  pinMode(east_segA, OUTPUT);
+  pinMode(east_segB, OUTPUT);
+  pinMode(east_segC, OUTPUT);
+  pinMode(east_segD, OUTPUT);
+  pinMode(east_segE, OUTPUT);
+  pinMode(east_segF, OUTPUT);
+  pinMode(east_segG, OUTPUT);
+  pinMode(west_segA, OUTPUT);
+  pinMode(west_segB, OUTPUT);
+  pinMode(west_segC, OUTPUT);
+  pinMode(west_segD, OUTPUT);
+  pinMode(west_segE, OUTPUT);
+  pinMode(west_segF, OUTPUT);
+  pinMode(west_segG, OUTPUT);
+  pinMode(south_segA, OUTPUT);
+  pinMode(south_segB, OUTPUT);
+  pinMode(south_segC, OUTPUT);
+  pinMode(south_segD, OUTPUT);
+  pinMode(south_segE, OUTPUT);
+  pinMode(south_segF, OUTPUT);
+  pinMode(south_segG, OUTPUT);
+  pinMode(north_segA, OUTPUT);
+  pinMode(north_segB, OUTPUT);
+  pinMode(north_segC, OUTPUT);
+  pinMode(north_segD, OUTPUT);
+  pinMode(north_segE, OUTPUT);
+  pinMode(north_segF, OUTPUT);
+  pinMode(north_segG, OUTPUT);
+
+  Serial.begin(9600);
+
+  // 초기 상태 설정
+  setAllVehicleLightsOff();
+  setAllPedestrianLightsOff();
+}
+
+void loop() {
+  unsigned long currentMillis = millis();
+
+  // "차량"과 "기본" 모드 감지
+  int vehicleSignal = digitalRead(22);
+  int defaultSignal = digitalRead(23);
+  int state = (defaultSignal << 1) | vehicleSignal;
+
+  Serial.print("vehicleSignal = ");
+  Serial.print(vehicleSignal);
+  Serial.print(", defaultSignal = ");
+  Serial.println(defaultSignal);
+  Serial.print(", state = ");
+  Serial.println(state);
+
+  unsigned long elapsedTime = currentMillis - previousMillis;
+  turnOffDisplay(1);
+  turnOffDisplay(2);
+  turnOffDisplay(3);
+  turnOffDisplay(4);
+  resetDisplayForLight(currentLight, state, elapsedTime);
+
+  // 기본 모드 동작 (state == 0)
+  if (state == 0 || state == 3) {
+    // 차량 또는 보행자 모드에서 전환되었을 때, 초기화
+    if (currentMillis - previousMillis >= greenLightDuration) {
+      // 기본 모드 동작
+      setLightState(currentLight, HIGH, LOW, LOW);  // 현재 차량 신호등 초록불
+      setPedestrianState(currentLight, LOW, HIGH);  // 현재 보행자 신호등 초록불
+      setAllRedExcept(currentLight);
+
+      // 현재 초록불 상태의 차량 신호등을 노란불로 전환
+      setLightState(currentLight, LOW, HIGH, LOW);
+      delay(yellowLightDuration);
+
+      // 다음 신호등으로 전환
+      int nextLight = (currentLight % 4) + 1;      // 다음 신호등 계산
+      setLightState(currentLight, LOW, LOW, HIGH); // 현재 차량 신호등 빨간불
+      setLightState(nextLight, HIGH, LOW, LOW);    // 다음 차량 신호등 초록불
+
+      // 보행자 신호등 전환: 현재 보행자 신호등을 빨간불로 전환하고, 다음 보행자 신호등을 초록불로 전환
+      setPedestrianState(currentLight, HIGH, LOW); // 현재 보행자 신호등 빨간불
+      setPedestrianState(nextLight, LOW, HIGH);    // 다음 보행자 신호등 초록불
+
+      // 현재 초록불 상태 업데이트
+      currentLight = nextLight;
+      previousMillis = millis();  // 새로운 초록불 지속 시간 시작
+    }
+  }
+
+  // 차량 모드 동작 (state == 1)
+  else if (state == 1) {
+    unsigned long elapsedTime = currentMillis - previousMillis;
+
+    if (elapsedTime < 3000) {
+      // 0~3초: 1번과 3번 차량 신호등 초록불
+      setLightState(1, HIGH, LOW, LOW);  // 1번 차량 신호등 초록불
+      setLightState(3, HIGH, LOW, LOW);  // 3번 차량 신호등 초록불
+      setLightState(2, LOW, LOW, HIGH);  // 2번 차량 신호등 빨간불
+      setLightState(4, LOW, LOW, HIGH);  // 4번 차량 신호등 빨간불
+    } else if (elapsedTime < 4000) {
+      // 3~4초: 1번과 3번 차량 신호등 노란불
+      setLightState(1, LOW, HIGH, LOW);  // 1번 차량 신호등 노란불
+      setLightState(3, LOW, HIGH, LOW);  // 3번 차량 신호등 노란불
+    } else if (elapsedTime < 7000) {
+      // 4~7초: 2번과 4번 차량 신호등 초록불
+      setLightState(1, LOW, LOW, HIGH);  // 1번 차량 신호등 빨간불
+      setLightState(3, LOW, LOW, HIGH);  // 3번 차량 신호등 빨간불
+      setLightState(2, HIGH, LOW, LOW);  // 2번 차량 신호등 초록불
+      setLightState(4, HIGH, LOW, LOW);  // 4번 차량 신호등 초록불
+    } else if (elapsedTime < 8000) {
+      // 7~8초: 2번과 4번 차량 신호등 노란불
+      setLightState(2, LOW, HIGH, LOW);  // 2번 차량 신호등 노란불
+      setLightState(4, LOW, HIGH, LOW);  // 4번 차량 신호등 노란불
+    } else {
+      // 8초 이후: 다음 주기 시작
+      previousMillis = currentMillis;  // 타이머 초기화
+      setLightState(1, HIGH, LOW, LOW);  // 1번 차량 신호등 초록불
+      setLightState(3, HIGH, LOW, LOW);  // 3번 차량 신호등 초록불
+      setLightState(2, LOW, LOW, HIGH);  // 2번 차량 신호등 빨간불
+      setLightState(4, LOW, LOW, HIGH);  // 4번 차량 신호등 빨간불
+    }
+
+    // 보행자 신호등은 항상 빨간불로 유지
+    setAllPedestrianRed();
+
+  }
+  // 기본 모드에서 시간만 수정한 동작 (state == 2)
+  else if (state == 2) {
+    unsigned long elapsedTime = currentMillis - previousMillis;
+
+    if (elapsedTime < 8000) {
+      // 0~8초: currentLight 차량 신호등과 보행자 신호등 초록불, 나머지 신호등 빨간불
+      setLightState(currentLight, HIGH, LOW, LOW);   // currentLight 차량 신호등 초록불
+      setPedestrianState(currentLight, LOW, HIGH);   // currentLight 보행자 신호등 초록불
+      setAllRedExcept(currentLight);                 // 나머지 신호등 빨간불
+    }
+    else if (elapsedTime < 9000) {
+      // 8~9초: currentLight 차량 신호등 노란불, 보행자 신호등은 변하지 않음
+      setLightState(currentLight, LOW, HIGH, LOW);   // currentLight 차량 신호등 노란불
+    }
+    else {
+      // 9초 이후: currentLight 차량 신호등과 보행자 신호등 빨간불, 다음 차량과 보행자 초록불
+      setLightState(currentLight, LOW, LOW, HIGH);   // currentLight 차량 신호등 빨간불
+      setPedestrianState(currentLight, HIGH, LOW);   // currentLight 보행자 신호등 빨간불
+
+      // 다음 신호등으로 전환
+      currentLight = (currentLight % 4) + 1;         // currentLight 순환 (1 -> 2 -> 3 -> 4)
+
+      setLightState(currentLight, HIGH, LOW, LOW);   // nextLight 차량 신호등 초록불
+      setPedestrianState(currentLight, LOW, HIGH);   // nextLight 보행자 신호등 초록불
+
+      // 주기 종료 후 초기화
+      previousMillis = currentMillis;     // 새로운 주기 시작
+    }
+  }
+}
+
+
+// 차량 신호등 상태 설정 함수
+void setLightState(int lightNumber, int green, int yellow, int red) {
+  switch (lightNumber) {
+    case 1:
+      digitalWrite(2, red);    // 1번 차량 신호등 빨간불
+      digitalWrite(3, yellow); // 1번 차량 신호등 노란불
+      digitalWrite(4, green);  // 1번 차량 신호등 초록불
+      break;
+    case 2:
+      digitalWrite(5, red);    // 2번 차량 신호등 빨간불
+      digitalWrite(6, yellow); // 2번 차량 신호등 노란불
+      digitalWrite(7, green);  // 2번 차량 신호등 초록불
+      break;
+    case 3:
+      digitalWrite(8, red);    // 3번 차량 신호등 빨간불
+      digitalWrite(9, yellow); // 3번 차량 신호등 노란불
+      digitalWrite(10, green); // 3번 차량 신호등 초록불
+      break;
+    case 4:
+      digitalWrite(11, red);   // 4번 차량 신호등 빨간불
+      digitalWrite(12, yellow);// 4번 차량 신호등 노란불
+      digitalWrite(13, green); // 4번 차량 신호등 초록불
+      break;
+  }
+}
+
+// 보행자 신호등 상태 설정 함수
+void setPedestrianState(int lightNumber, int red, int green) {
+  switch (lightNumber) {
+    case 1:
+      digitalWrite(14, red);   // 보행자 1번 신호등 빨간불
+      digitalWrite(15, green); // 보행자 1번 신호등 초록불
+      break;
+    case 2:
+      digitalWrite(16, red);   // 보행자 2번 신호등 빨간불
+      digitalWrite(17, green); // 보행자 2번 신호등 초록불
+      break;
+    case 3:
+      digitalWrite(18, red);   // 보행자 3번 신호등 빨간불
+      digitalWrite(19, green); // 보행자 3번 신호등 초록불
+      break;
+    case 4:
+      digitalWrite(20, red);   // 보행자 4번 신호등 빨간불
+      digitalWrite(21, green); // 보행자 4번 신호등 초록불
+      break;
+  }
+}
+
+// 보행자 신호등만 모두 빨간불로 설정
+void setAllPedestrianRed() {
+  for (int i = 1; i <= 4; i++) {
+    setPedestrianState(i, HIGH, LOW); // 모든 보행자 신호등 빨간불
+  }
+}
+
+// 나머지 신호등을 모두 빨간불로 설정하는 함수
+void setAllRedExcept(int activeLight) {
+  for (int i = 1; i <= 4; i++) {
+    if (i != activeLight) {
+      setLightState(i, LOW, LOW, HIGH); // 차량 신호등: 활성화된 신호등을 제외하고 모두 빨간불
+      setPedestrianState(i, HIGH, LOW); // 보행자 신호등: 활성화된 신호등을 제외하고 모두 빨간불
+    }
+  }
+}
+
+void blinkYellowLights() {
+  static bool yellowOn = false;
+  static unsigned long lastBlinkTime = 0;
+  unsigned long currentMillis = millis();
+
+  if (currentMillis - lastBlinkTime >= 500) { // 500ms마다 깜빡임
+    yellowOn = !yellowOn;
+    lastBlinkTime = currentMillis;
+  }
+
+  int yellowState = yellowOn ? HIGH : LOW;
+
+  // 모든 차량 신호등에 대해 노란불 깜빡임 설정
+  digitalWrite(eastCledOrange, yellowState);
+  digitalWrite(westCledOrange, yellowState);
+  digitalWrite(southCledOrange, yellowState);
+  digitalWrite(northCledOrange, yellowState);
+}
+
+// 모든 차량 신호등 끄기
+void setAllVehicleLightsOff() {
+  digitalWrite(eastCledRed, LOW);
+  digitalWrite(eastCledOrange, LOW);
+  digitalWrite(eastCledGreen, LOW);
+  digitalWrite(westCledRed, LOW);
+  digitalWrite(westCledOrange, LOW);
+  digitalWrite(westCledGreen, LOW);
+  digitalWrite(southCledRed, LOW);
+  digitalWrite(southCledOrange, LOW);
+  digitalWrite(southCledGreen, LOW);
+  digitalWrite(northCledRed, LOW);
+  digitalWrite(northCledOrange, LOW);
+  digitalWrite(northCledGreen, LOW);
+}
+
+// 모든 보행자 신호등 끄기
+void setAllPedestrianLightsOff() {
+  digitalWrite(eastPledRed, LOW);
+  digitalWrite(eastPledGreen, LOW);
+  digitalWrite(westPledRed, LOW);
+  digitalWrite(westPledGreen, LOW);
+  digitalWrite(southPledRed, LOW);
+  digitalWrite(southPledGreen, LOW);
+  digitalWrite(northPledRed, LOW);
+  digitalWrite(northPledGreen, LOW);
+}
+
+
+// 7세그먼트 디스플레이를 끄는 함수
+void turnOffDisplay(int lightNumber) {
+  switch (lightNumber) {
+    case 1:
+      digitalWrite(east_segA, HIGH);
+      digitalWrite(east_segB, HIGH);
+      digitalWrite(east_segC, HIGH);
+      digitalWrite(east_segD, HIGH);
+      digitalWrite(east_segE, HIGH);
+      digitalWrite(east_segF, HIGH);
+      digitalWrite(east_segG, HIGH);
+      break;
+    case 2:
+      digitalWrite(west_segA, HIGH);
+      digitalWrite(west_segB, HIGH);
+      digitalWrite(west_segC, HIGH);
+      digitalWrite(west_segD, HIGH);
+      digitalWrite(west_segE, HIGH);
+      digitalWrite(west_segF, HIGH);
+      digitalWrite(west_segG, HIGH);
+      break;
+    case 3:
+      digitalWrite(south_segA, HIGH);
+      digitalWrite(south_segB, HIGH);
+      digitalWrite(south_segC, HIGH);
+      digitalWrite(south_segD, HIGH);
+      digitalWrite(south_segE, HIGH);
+      digitalWrite(south_segF, HIGH);
+      digitalWrite(south_segG, HIGH);
+      break;
+    case 4:
+      digitalWrite(north_segA, HIGH);
+      digitalWrite(north_segB, HIGH);
+      digitalWrite(north_segC, HIGH);
+      digitalWrite(north_segD, HIGH);
+      digitalWrite(north_segE, HIGH);
+      digitalWrite(north_segF, HIGH);
+      digitalWrite(north_segG, HIGH);
+      break;
+  }
+}
+
+// 숫자를 7세그먼트 디스플레이에 표시하는 함수
+void displayNumber(int lightNumber, int num) {
+  switch (lightNumber) {
+    case 1:
+      digitalWrite(east_segA, numbers[num][0]);
+      digitalWrite(east_segB, numbers[num][1]);
+      digitalWrite(east_segC, numbers[num][2]);
+      digitalWrite(east_segD, numbers[num][3]);
+      digitalWrite(east_segE, numbers[num][4]);
+      digitalWrite(east_segF, numbers[num][5]);
+      digitalWrite(east_segG, numbers[num][6]);
+      break;
+    case 2:
+      digitalWrite(west_segA, numbers[num][0]);
+      digitalWrite(west_segB, numbers[num][1]);
+      digitalWrite(west_segC, numbers[num][2]);
+      digitalWrite(west_segD, numbers[num][3]);
+      digitalWrite(west_segE, numbers[num][4]);
+      digitalWrite(west_segF, numbers[num][5]);
+      digitalWrite(west_segG, numbers[num][6]);
+      break;
+    case 3:
+      digitalWrite(south_segA, numbers[num][0]);
+      digitalWrite(south_segB, numbers[num][1]);
+      digitalWrite(south_segC, numbers[num][2]);
+      digitalWrite(south_segD, numbers[num][3]);
+      digitalWrite(south_segE, numbers[num][4]);
+      digitalWrite(south_segF, numbers[num][5]);
+      digitalWrite(south_segG, numbers[num][6]);
+      break;
+    case 4:
+      digitalWrite(north_segA, numbers[num][0]);
+      digitalWrite(north_segB, numbers[num][1]);
+      digitalWrite(north_segC, numbers[num][2]);
+      digitalWrite(north_segD, numbers[num][3]);
+      digitalWrite(north_segE, numbers[num][4]);
+      digitalWrite(north_segF, numbers[num][5]);
+      digitalWrite(north_segG, numbers[num][6]);
+      break;
+  }
+}
+
+// 디스플레이 초기화 및 제어 함수 (초록불이 켜질 때 호출)
+void resetDisplayForLight(int lightNumber, int state, unsigned long elapsedTime) {
+  int countdownTime;
+
+  switch (state) {
+    case 0:
+      // 3초부터 1초까지 카운트다운 (state = 0)
+      countdownTime = 3 - (elapsedTime / 1000); // 남은 시간 계산
+      if (countdownTime >= 1 && countdownTime <= 3) {
+        displayNumber(lightNumber, countdownTime); // 디스플레이에 남은 시간을 표시
+      }
+      break;
+
+    case 1:
+      // 디스플레이 OFF (state = 1)
+      turnOffDisplay(lightNumber);
+      break;
+
+    case 2:
+      // 9초부터 1초까지 카운트다운 (state = 2)
+      countdownTime = 9 - (elapsedTime / 1000); // 남은 시간 계산
+      if (countdownTime >= 1 && countdownTime <= 9) {
+        displayNumber(lightNumber, countdownTime); // 디스플레이에 남은 시간을 표시
+      }
+      break;
+  }
+}
