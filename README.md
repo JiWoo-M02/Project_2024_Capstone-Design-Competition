@@ -14,7 +14,7 @@
 <br>
   
 ## 포스터
-| 2024년도 차세대 디스플레이 컨소시엄 창의적 종합설계 경진대회 | 2024년도 교내 캡스톤 디자인 경진대회 |
+| 2024년도 차세대 디스플레이 컨소시엄<br>창의적 종합설계 경진대회 | 2024년도 교내 캡스톤 디자인 경진대회 |
 | -------------------------------------------------------- | ----------------------------------- |
 | <p align="center"> <img height="500" src="https://github.com/user-attachments/assets/718361db-f205-48ce-88f1-b90743a76749" /> </p> | <p align="center"> <img height="500" src="https://github.com/user-attachments/assets/e67c0bef-180e-4b8b-96d1-d8d6b28b51f2" /> </p> |
 <br>
