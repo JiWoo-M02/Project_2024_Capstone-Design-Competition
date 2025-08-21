@@ -15,7 +15,6 @@
 - 기존 CCTV 활용으로 추가 센서 설치 없이 적용 가능
 <br>
 <br>
-<br>
 
 ## 💡 Skills
 - Python, PyTorch (YOLO/Detect.py 최적화 코드 작성)
